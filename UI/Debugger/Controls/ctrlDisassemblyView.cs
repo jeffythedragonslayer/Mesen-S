@@ -213,7 +213,7 @@ namespace Mesen.GUI.Debugger.Controls
 				firstLineOfSelection++;
 			}
 			int firstLineAfterSelection = ctrlCode.SelectionStart + ctrlCode.SelectionLength + 1;
-			while(firstLineOfSelection < lineCount && _manager.Provider.GetLineAddress(firstLineAfterSelection) < 0) {
+			while(firstLineAfterSelection < lineCount && _manager.Provider.GetLineAddress(firstLineAfterSelection) < 0) {
 				firstLineAfterSelection++;
 			}
 
