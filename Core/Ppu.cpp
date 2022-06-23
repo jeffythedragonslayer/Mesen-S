@@ -2312,7 +2312,7 @@ void Ppu::RenderTilemapMode7()
 template<uint8_t layerIndex, uint8_t normalPriority, uint8_t highPriority, bool applyMosaic>
 void Ppu::RenderTilemapMode7()
 {
-	if(_state.DirectColorMode) {
+	if(_state.DirectColorMode && layerIndex == 0) {
 		RenderTilemapMode7<layerIndex, normalPriority, highPriority, applyMosaic, true>();
 	} else {
 		RenderTilemapMode7<layerIndex, normalPriority, highPriority, applyMosaic, false>();
