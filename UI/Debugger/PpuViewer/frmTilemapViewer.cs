@@ -427,7 +427,7 @@ namespace Mesen.GUI.Debugger
 
 		private void mnuAutoRefresh_CheckedChanged(object sender, EventArgs e)
 		{
-			_refreshManager.AutoRefresh = mnuAutoRefresh.Checked;
+			if( _refreshManager != null ) _refreshManager.AutoRefresh = mnuAutoRefresh.Checked;
 		}
 
 		private void UpdateRefreshSpeedMenu()
