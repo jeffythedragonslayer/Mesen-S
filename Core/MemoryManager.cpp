@@ -263,23 +263,29 @@ uint8_t MemoryManager::Read(uint32_t addr, MemoryOperationType type)
 uint8_t MemoryManager::ReadDma(uint32_t addr, bool forBusA)
 {
 	_cpu->DetectNmiSignalEdge();
+	LogDebug("detect NMI signal edge");
 	IncMasterClock4();
 
 	uint8_t value;
 	IMemoryHandler* handler = _mappings.GetHandler(addr);
 	if(handler) {
+		LogDebug("handler");
 		if(forBusA && handler == _registerHandlerB.get() && (addr & 0xFF00) == 0x2100) {
 			//Trying to read from bus B using bus A returns open bus
+			LogDebug("Trying to read from bus B using bus A returns open bus");
 			value = _openBus;
 		} else if(handler == _registerHandlerA.get()) {
 			uint16_t regAddr = addr & 0xFFFF;
 			if(regAddr == 0x420B || regAddr == 0x420C || (regAddr >= 0x4300 && regAddr <= 0x437F)) {
 				//Trying to read the DMA controller with DMA returns open bus
+				LogDebug("Trying to read the DMA controller with DMA returns open bus");
 				value = _openBus;
 			} else {
+				LogDebug("viva1");
 				value = handler->Read(addr);
 			}
 		} else {
+			LogDebug("viva2");
 			value = handler->Read(addr);
 			if(handler != _registerHandlerB.get()) {
 				_memTypeBusA = handler->GetMemoryType();

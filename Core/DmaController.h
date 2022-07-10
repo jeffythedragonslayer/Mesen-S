@@ -5,10 +5,12 @@
 #include "../Utilities/ISerializable.h"
 
 class MemoryManager;
+class Console;
 
 class DmaController final : public ISerializable
 {
 private:
+	Console* _console;
 	static constexpr uint8_t HdmaChannelFlag = 0x40;
 
 	bool _needToProcess = false;
@@ -40,7 +42,7 @@ private:
 	bool HasActiveDmaChannel();
 
 public:
-	DmaController(MemoryManager *memoryManager);
+	DmaController(MemoryManager *memoryManager, Console*);
 
 	void Reset();
 

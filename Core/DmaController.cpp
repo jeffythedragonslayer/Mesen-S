@@ -4,6 +4,7 @@
 #include "MemoryManager.h"
 #include "MessageManager.h"
 #include "../Utilities/Serializer.h"
+#include "Console.h"
 
 static constexpr uint8_t _transferByteCount[8] = { 1, 2, 2, 4, 4, 4, 2, 4 };
 static constexpr uint8_t _transferOffset[8][4] = {
@@ -11,8 +12,9 @@ static constexpr uint8_t _transferOffset[8][4] = {
 	{ 0, 1, 2, 3 }, { 0, 1, 0, 1 }, { 0, 0, 0, 0 }, { 0, 0, 1, 1 }
 };
 
-DmaController::DmaController(MemoryManager *memoryManager)
+DmaController::DmaController(MemoryManager *memoryManager, Console* console)
 {
+	_console = console;
 	_memoryManager = memoryManager;
 	Reset();
 
@@ -40,21 +42,29 @@ void DmaController::Reset()
 
 void DmaController::CopyDmaByte(uint32_t addressBusA, uint16_t addressBusB, bool fromBtoA)
 {
-	if(fromBtoA) {
+	if(fromBtoA) { 
+		//_console->DebugLog("from B to A");
 		if(addressBusB != 0x2180 || !_memoryManager->IsWorkRam(addressBusA)) {
 			uint8_t valToWrite = _memoryManager->ReadDma(addressBusB, false);
+			//_console->DebugLog("valToWrite: " + valToWrite);
 			_memoryManager->WriteDma(addressBusA, valToWrite, true);
 		} else {
 			//$2180->WRAM do cause a write to occur (but no read), but the value written is invalid
+			//_console->DebugLog("invalid value written");
 			_memoryManager->IncMasterClock4();
 			_memoryManager->WriteDma(addressBusA, 0xFF, true);
 		}
 	} else {
+		//_console->DebugLog("from A to B*");
+		//_console->DebugLog("about to call IsWorkRam");
 		if(addressBusB != 0x2180 || !_memoryManager->IsWorkRam(addressBusA)) {
+			//_console->DebugLog("about to call ReadDma");
 			uint8_t valToWrite = _memoryManager->ReadDma(addressBusA, true);
+			_console->DebugLog(std::string("valToWrite: ") + std::to_string(valToWrite));
 			_memoryManager->WriteDma(addressBusB, valToWrite, false);
 		} else {
 			//WRAM->$2180 does not cause a write to occur
+			//_console->DebugLog("no write occurred");
 			_memoryManager->IncMasterClock8();
 		}
 	}

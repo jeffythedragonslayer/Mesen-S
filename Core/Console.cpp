@@ -420,7 +420,7 @@ bool Console::LoadRom(VirtualFile romFile, VirtualFile patchFile, bool stopRom, 
 		_memoryManager.reset(new MemoryManager());
 		_ppu.reset(new Ppu(this));
 		_controlManager.reset(new ControlManager(this));
-		_dmaController.reset(new DmaController(_memoryManager.get()));
+		_dmaController.reset(new DmaController(_memoryManager.get(), this));
 		_spc.reset(new Spc(this));
 
 		_msu1.reset(Msu1::Init(romFile, _spc.get()));
