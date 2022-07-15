@@ -1,3 +1,5 @@
+#include "Console.h"
+
 /************************
 Add/substract operations
 *************************/
@@ -876,8 +878,10 @@ void Cpu::LoadRegister(uint16_t &reg, bool eightBitMode)
 void Cpu::StoreRegister(uint16_t val, bool eightBitMode)
 {
 	if(eightBitMode) {
+		_console->DebugLog("    Write Byte"); 
 		Write(_operand, (uint8_t)val);
 	} else {
+		_console->DebugLog("    Write Word"); 
 		WriteWord(_operand, val);
 	}
 }
@@ -909,7 +913,13 @@ void Cpu::STA()
 void Cpu::STX()
 {
 	//"When the x flag is 0, LDX, LDY, STX, and STY are 16-bit operations"
+	_console->DebugLog("");
+	_console->DebugLog("STX");
+	_console->DebugLog("about to call StoreRegister");
+	_console->DebugLog("state.X" + std::to_string(_state.X));
+	_console->DebugLog("operand: " + std::to_string(_operand));
 	StoreRegister(_state.X, CheckFlag(ProcFlags::IndexMode8));
+	_console->DebugLog("StoreRegister returned");
 }
 
 void Cpu::STY()

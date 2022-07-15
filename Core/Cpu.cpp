@@ -111,6 +111,8 @@ uint8_t Cpu::Read(uint32_t addr, MemoryOperationType type)
 
 void Cpu::Write(uint32_t addr, uint8_t value, MemoryOperationType type)
 {
+	_console->DebugLog("addr: " + std::to_string(addr));
+	_console->DebugLog("value: " + std::to_string(value));
 	_memoryManager->SetCpuSpeed(_memoryManager->GetCpuSpeed(addr));
 	ProcessCpuCycle();
 	_memoryManager->Write(addr, value, type);
